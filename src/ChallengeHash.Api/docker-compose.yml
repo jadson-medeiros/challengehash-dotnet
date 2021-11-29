@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+        SA_PASSWORD: challengehash
+        ACCEPT_EULA: Y
+    volumes:
+      - ./sql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "1440:1433"
+  challengehash.api:
+    image: ${DOCKER_REGISTRY-}challengehash
+    container_name: challengehash-api
+    build:
+      context: .
+      dockerfile: Dockerfile

@@ -1,0 +1,23 @@
+version: "3.4"
+services:
+  db:
+    image: postgres:latest
+    container_name: challengehash.db
+    environment:
+        POSTGRES_DB: challengehash
+        POSTGRES_PASSWORD: hash123
+    volumes:
+      - ./sql/init-db.sql:/docker-entrypoint-init-db.d/init-db.sql
+    ports:
+      - "5432:5432"
+    restart: always
+  challengehash:
+    image: ${DOCKER_REGISTRY-}challengehash
+    container_name: challengehash.api
+    depends_on:
+      - "db"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - "5001:80"
